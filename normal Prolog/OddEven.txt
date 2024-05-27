@@ -1,0 +1,20 @@
+% Base cases
+even(0).
+odd(1).
+
+% Recursive cases
+even(N) :- 
+    N > 0,
+    N1 is N - 1,
+    odd(N1).
+
+odd(N) :- 
+    N > 1,
+    N1 is N - 1,
+    even(N1).
+
+% Queries
+% ?- even(4).
+% ?- odd(3).
+% ?- even(2).
+% ?- odd(5).

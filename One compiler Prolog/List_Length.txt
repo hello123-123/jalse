@@ -1,0 +1,11 @@
+:- initialization(main).
+
+main :- 
+    write('Enter a list (e.g., [a, b, c, d]): '), read(List),
+    list_length(List, L), write('Length is '), write(L), nl,
+    halt.
+
+list_length([], 0).
+list_length([_|T], L) :-
+    list_length(T, L1),
+    L is L1 + 1.

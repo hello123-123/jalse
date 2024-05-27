@@ -1,0 +1,11 @@
+:- initialization(main).
+
+main :- 
+    write('Enter a list of numbers (e.g., [1, 2, 3, 4]): '), read(List),
+    sum_list(List, Sum), write('Sum is '), write(Sum), nl,
+    halt.
+
+sum_list([], 0).
+sum_list([H|T], Sum) :-
+    sum_list(T, Rest),
+    Sum is H + Rest.

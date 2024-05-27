@@ -1,0 +1,148 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+void PrintBoard(const vector<char>& board) {
+    cout << endl;
+    cout << " " << board[0] << " | " << board[1] << " | " << board[2] << endl;
+    cout << "---|---|---" << endl;
+    cout << " " << board[3] << " | " << board[4] << " | " << board[5] << endl;
+    cout << "---|---|---" << endl;
+    cout << " " << board[6] << " | " << board[7] << " | " << board[8] << endl;
+    cout << endl;
+}
+
+int GetNumber() {
+    int number;
+    while (true) {
+        cin >> number;
+        if (number >= 1 && number <= 9) {
+            return number;
+        } else {
+            cout << "Number not on board. Try again: ";
+        }
+    }
+}
+
+bool CheckWin(const vector<char>& board, char player) {
+    // Magic square logic
+    vector<int> magicSquare = {4, 9, 2, 3, 5, 7, 8, 1, 6};
+
+    for (int x = 0; x < 9; ++x) {
+        for (int y = 0; y < 9; ++y) {
+            for (int z = 0; z < 9; ++z) {
+                if (x != y && y != z && z != x) {
+                    if (board[x] == player && board[y] == player && board[z] == player) {
+                        if (magicSquare[x] + magicSquare[y] + magicSquare[z] == 15) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    int count = 0;
+    for (int a = 0; a < 9; ++a) {
+        if (board[a] == 'X' || board[a] == 'O') {
+            count++;
+        }
+    }
+
+    if (count == 9) {
+        cout << "The game ends in a Tie" << endl;
+        return true;
+    }
+
+    return false;
+}
+
+int FindWinningMove(vector<char>& board, char player) {
+    vector<int> magicSquare = {4, 9, 2, 3, 5, 7, 8, 1, 6};
+    for (int i = 0; i < 9; ++i) {
+        if (board[i] == (i + '1')) {
+            board[i] = player;
+            if (CheckWin(board, player)) {
+                board[i] = (i + '1');
+                return i;
+            } else {
+                board[i] = (i + '1');
+            }
+        }
+    }
+    return -1;
+}
+
+void Turn(vector<char>& board, char player) {
+    if (player == 'X') {
+        cout << "Choose a box Player X: ";
+        int placingIndex = GetNumber() - 1;
+        if (board[placingIndex] == 'X' || board[placingIndex] == 'O') {
+            cout << "Box already occupied. Try another one" << endl;
+            Turn(board, 'X');
+        } else {
+            board[placingIndex] = 'X';
+        }
+    } else {
+        cout << "Computer's turn (Player O)" << endl;
+        int winningMove = FindWinningMove(board, 'O');
+        if (winningMove != -1) {
+            board[winningMove] = 'O';
+        } else {
+            int blockingMove = FindWinningMove(board, 'X');
+            if (blockingMove != -1) {
+                board[blockingMove] = 'O';
+            } else {
+                vector<int> availableMoves;
+                for (int i = 0; i < 9; ++i) {
+                    if (board[i] != 'X' && board[i] != 'O') {
+                        availableMoves.push_back(i);
+                    }
+                }
+                if (!availableMoves.empty()) {
+                    int moveIndex = rand() % availableMoves.size();
+                    board[availableMoves[moveIndex]] = 'O';
+                } else {
+                    cout << "No available moves for the computer!" << endl;
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    vector<char> board = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    bool end = false;
+
+    while (!end) {
+        PrintBoard(board);
+        end = CheckWin(board, 'O');
+        if (end) {
+            cout << "Player O wins!" << endl; // Print win condition
+            break;
+        }
+        Turn(board, 'X');
+
+        PrintBoard(board);
+        end = CheckWin(board, 'X');
+        if (end) {
+            cout << "Player X wins!" << endl; // Print win condition
+            break;
+        }
+        Turn(board, 'O');
+    }
+
+    char playAgain;
+    cout << "Play again? (y/n): ";
+    cin >> playAgain;
+
+    if (playAgain == 'y' || playAgain == 'Y') {
+        cout << endl;
+        main();
+    }
+
+    return 0;
+}

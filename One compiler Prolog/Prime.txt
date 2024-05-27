@@ -1,0 +1,17 @@
+:- initialization(main).
+
+main :- 
+    write('Enter a number: '), read(N),
+    (prime(N) -> write(N), write(' is prime.'), nl ; write(N), write(' is not prime.'), nl),
+    halt.
+
+is_divisible(N, K) :- 0 is N mod K.
+is_divisible(N, K) :-
+    K * K < N,
+    K1 is K + 1,
+    is_divisible(N, K1).
+
+prime(2).
+prime(N) :-
+    N > 2,
+    \+ is_divisible(N, 2).

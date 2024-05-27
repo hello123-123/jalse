@@ -1,0 +1,12 @@
+:- initialization(main).
+
+main :- 
+    write('Enter a list (e.g., [1,2,3,2,1]): '), read(List),
+    (palindrome(List) -> write('It is a palindrome.'), nl ; write('It is not a palindrome.'), nl),
+    halt.
+
+palindrome([]).
+palindrome([_]).
+palindrome([H|T]) :-
+    append(Mid, [H], T),
+    palindrome(Mid).

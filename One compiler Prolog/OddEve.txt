@@ -1,0 +1,13 @@
+:- initialization(main).
+
+main :- 
+    write('Enter a number: '), read(N),
+    (even(N) -> write(N), write(' is even.'), nl ; write(N), write(' is not even.'), nl),
+    (odd(N) -> write(N), write(' is odd.'), nl ; write(N), write(' is not odd.'), nl),
+    halt.
+
+even(N) :- 
+    0 is N mod 2.
+
+odd(N) :- 
+    1 is N mod 2.
